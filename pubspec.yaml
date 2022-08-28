@@ -25,9 +25,10 @@ dependencies:
     sdk: flutter
   geocoding: ^2.0.2
   geolocator: ^8.1.1
-  location: ^4.3.0
+  location: ^4.4.0
   flutter_map: ^2.2.0 #responsible for rendering the map on the screen
   latlong2: ^0.8.1 #gets any lat lng requested
+  flutter_map_marker_popup: ^3.2.0
   #marker_icon: ^1.0.0
 
 

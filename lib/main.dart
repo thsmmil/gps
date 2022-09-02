@@ -30,43 +30,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late bool _serviceEnabled; //verifica o GPS (on/off)
   late PermissionStatus _permissionGranted; //verificar a permissão de acesso
-  final List<Marker> _markers = [
-    Marker(
-      point: LatLng(-8.89074, -36.4966),
-      builder: (context) => Icon(Icons.pin_drop),
-    ),
-    Marker(
-      point: LatLng(-8.045857068501272, -34.946622304194925),
-      builder: (context) => Icon(
-        Icons.pin_drop,
-        color: Colors.red,
-      ),
-    ),
-    Marker(
-      point: LatLng(32.810538, 130.707024),
-      builder: (context) => Icon(
-        Icons.pin_drop,
-        color: Colors.blue,
-      ),
-    ),
-    Marker(
-      point: LatLng(45.424086683990296, -75.70174554996494),
-      builder: (context) => Icon(
-        Icons.pin_drop,
-        color: Colors.orange,
-      ),
-    ),
-  ];
+  List<Marker> _markers = [];
+  List<LatLng> _points = [];
   final PopupController _popupLayerController = PopupController();
   LocationData? _userLocation;
   String? address;
-  final List<LatLng> popup = [
-    LatLng(-8.89074, -36.4966),
-    LatLng(-8.045857068501272, -34.946622304194925),
-    LatLng(32.810538, 130.707024),
-    LatLng(45.424086683990296, -75.70174554996494),
-  ];
-
   Future<void> _getUserLocation() async {
     Location location = Location();
 
@@ -125,61 +93,54 @@ class _HomePageState extends State<HomePage> {
                           zoom: 2,
                         ),
                         // layers: [
-                          // TileLayerOptions(
-                          //     urlTemplate:
-                          //         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                          //     subdomains: ['a', 'b', 'c']),
+                        // TileLayerOptions(
+                        //     urlTemplate:
+                        //         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        //     subdomains: ['a', 'b', 'c']),
                         //   //MarkerLayerOptions(markers: _markers),
-                          // PolylineLayerOptions(
-                          //     polylineCulling: false,
-                          //     polylines: [
-                          //       Polyline(
-                          //           points: [
-                          //             LatLng(-8.89074, -36.4966),
-                          //             LatLng(-8.045857068501272,
-                          //                 -34.946622304194925),
-                          //             LatLng(32.810538, 130.707024),
-                          //             LatLng(45.424086683990296,
-                          //                 -75.70174554996494),
-                          //           ],
-                          //           color: Colors.blue,
-                          //           strokeWidth: 2.5,
-                          //           borderStrokeWidth: 1.0,
-                          //           borderColor: Colors.blueAccent)
-                          //     ]),
-                          // PopupMarkerLayerOptions(
-                          //   popupController: _popupLayerController,
-                          //   markers: _markers,
-                          //   popupBuilder:
-                          //       (BuildContext context, Marker marker) =>
-                          //           ExamplePopup(marker),
-                          // ),
+                        // PolylineLayerOptions(
+                        //     polylineCulling: false,
+                        //     polylines: [
+                        //       Polyline(
+                        //           points: [
+                        //             LatLng(-8.89074, -36.4966),
+                        //             LatLng(-8.045857068501272,
+                        //                 -34.946622304194925),
+                        //             LatLng(32.810538, 130.707024),
+                        //             LatLng(45.424086683990296,
+                        //                 -75.70174554996494),
+                        //           ],
+                        //           color: Colors.blue,
+                        //           strokeWidth: 2.5,
+                        //           borderStrokeWidth: 1.0,
+                        //           borderColor: Colors.blueAccent)
+                        //     ]),
+                        // PopupMarkerLayerOptions(
+                        //   popupController: _popupLayerController,
+                        //   markers: _markers,
+                        //   popupBuilder:
+                        //       (BuildContext context, Marker marker) =>
+                        //           ExamplePopup(marker),
+                        // ),
                         //],
                         children: [
-                          TileLayerWidget(options: 
-                             TileLayerOptions(
-                              urlTemplate:
-                                  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                              subdomains: ['a', 'b', 'c']),
+                          TileLayerWidget(
+                            options: TileLayerOptions(
+                                urlTemplate:
+                                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                subdomains: ['a', 'b', 'c']),
                           ),
-                          PolylineLayerWidget(options: 
-                          PolylineLayerOptions(
-                              polylineCulling: false,
-                              polylines: [
-                                Polyline(
-                                    points: [
-                                      LatLng(-8.89074, -36.4966),
-                                      LatLng(-8.045857068501272,
-                                          -34.946622304194925),
-                                      LatLng(32.810538, 130.707024),
-                                      LatLng(45.424086683990296,
-                                          -75.70174554996494),
-                                    ],
-                                    color: Colors.blue,
-                                    strokeWidth: 2.5,
-                                    borderStrokeWidth: 1.0,
-                                    borderColor: Colors.blueAccent)
-                              ]),
+                          PolylineLayerWidget(
+                            options: PolylineLayerOptions(
+                                polylineCulling: false,
+                                polylines: [
+                                  Polyline(
+                                      points: _points,
+                                      color: Colors.blue,
+                                      strokeWidth: 2.5,
+                                      borderStrokeWidth: 1.0,
+                                      borderColor: Colors.blueAccent)
+                                ]),
                           ),
                           PopupMarkerLayerWidget(
                             options: PopupMarkerLayerOptions(
@@ -205,8 +166,46 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   ElevatedButton(
-                    onPressed: _getUserLocation,
-                    child: Text('Get location'),
+                    onPressed: () {
+                      setState(() {
+                        _points = [
+                          LatLng(-8.89074, -36.4966),
+                          LatLng(-8.045857068501272, -34.946622304194925),
+                          LatLng(32.810538, 130.707024),
+                          LatLng(45.424086683990296, -75.70174554996494),
+                        ];
+                        _markers = [
+                          Marker(
+                            point: LatLng(-8.89074, -36.4966),
+                            builder: (context) => Icon(Icons.pin_drop),
+                          ),
+                          Marker(
+                            point:
+                                LatLng(-8.045857068501272, -34.946622304194925),
+                            builder: (context) => Icon(
+                              Icons.pin_drop,
+                              color: Colors.red,
+                            ),
+                          ),
+                          Marker(
+                            point: LatLng(32.810538, 130.707024),
+                            builder: (context) => Icon(
+                              Icons.pin_drop,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          Marker(
+                            point:
+                                LatLng(45.424086683990296, -75.70174554996494),
+                            builder: (context) => Icon(
+                              Icons.pin_drop,
+                              color: Colors.orange,
+                            ),
+                          ),
+                        ];
+                      });
+                    },
+                    child: Text("Where's CS?"),
                     style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(40)),
                   ),

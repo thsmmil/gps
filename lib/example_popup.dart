@@ -32,7 +32,9 @@ class _ExamplePopupState extends State<ExamplePopup> {
                   builder: (_) => CameraPage(
                       cameras: value,
                       nome: widget.marker.point.latitude.toString() +
-                          widget.marker.point.longitude.toString()))));
+                          widget.marker.point.longitude.toString(),
+                      marker: widget.marker
+                          ))));
         },
         child: Row(
           mainAxisSize: MainAxisSize.min,

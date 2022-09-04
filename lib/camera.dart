@@ -7,12 +7,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_map/flutter_map.dart';
+
+import 'main_new.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
   final String nome;
+  final Marker marker;
 
-  const CameraPage({Key? key, required this.cameras, required this.nome})
+  const CameraPage({Key? key, required this.cameras, required this.nome, required this.marker})
       : super(key: key);
 
   @override
@@ -37,7 +41,9 @@ class _CameraPageState extends State<CameraPage> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  PreviewPage(picture: picture, nomeMarker: widget.nome)));
+                  NewHomePage(picture: picture,
+                   //nomeMarker: widget.nome,
+                    marker: widget.marker)));
     } on CameraException catch (e) {
       debugPrint('Error occured while taking picture: $e');
       return null;

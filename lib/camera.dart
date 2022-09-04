@@ -10,8 +10,10 @@ import 'package:flutter/src/widgets/framework.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
+  final String nome;
 
-  const CameraPage({Key? key, required this.cameras}) : super(key: key);
+  const CameraPage({Key? key, required this.cameras, required this.nome})
+      : super(key: key);
 
   @override
   State<CameraPage> createState() => _CameraPageState();
@@ -34,9 +36,8 @@ class _CameraPageState extends State<CameraPage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => PreviewPage(
-                    picture: picture,
-                  )));
+              builder: (context) =>
+                  PreviewPage(picture: picture, nomeMarker: widget.nome)));
     } on CameraException catch (e) {
       debugPrint('Error occured while taking picture: $e');
       return null;
@@ -45,7 +46,7 @@ class _CameraPageState extends State<CameraPage> {
 
   Future initCamera(CameraDescription cameraDescription) async {
     _cameraController =
-        CameraController(cameraDescription, ResolutionPreset.high);
+        CameraController(cameraDescription, ResolutionPreset.low);
 
     try {
       await _cameraController.initialize().then((_) {

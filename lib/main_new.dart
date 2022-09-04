@@ -100,11 +100,13 @@ class _NewHomePageState extends State<NewHomePage> {
                             builder: (context) => const Icon(Icons.pin_drop),
                           ),
                           Marker(
-                              point: LatLng(
-                                  -8.045857068501272, -34.946622304194925),
-                              builder: (context) => Image.file(
-                                  File(widget.picture.path),
-                                  fit: BoxFit.cover)),
+                            point:
+                                LatLng(-8.045857068501272, -34.946622304194925),
+                            builder: (context) => const Icon(
+                              Icons.pin_drop,
+                              color: Colors.red,
+                            ),
+                          ),
                           Marker(
                             point: LatLng(32.810538, 130.707024),
                             builder: (context) => const Icon(
@@ -122,7 +124,7 @@ class _NewHomePageState extends State<NewHomePage> {
                           ),
                         ];
                         for (var i = 0; i < _markers.length; i++) {
-                          if (_markers[i] == widget.marker) {
+                          if (_markers[i].point == widget.marker.point) {
                             _markers[i] = Marker(
                               point: _markers[i].point,
                               builder: (context) => Image.file(
